@@ -1,9 +1,10 @@
 package com.clcmo.domain.repository
 
 import com.clcmo.domain.entities.AndroidJob
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.clcmo.domain.responses.ResultRequired
+import kotlinx.coroutines.flow.Flow
 
 interface AndroidJobsRepository {
-    fun getJobs(forceUpdate: Boolean): Single<List<AndroidJob>>
+    fun getJobs(): Flow<ResultRequired<List<AndroidJob>>>
+    fun add()
 }

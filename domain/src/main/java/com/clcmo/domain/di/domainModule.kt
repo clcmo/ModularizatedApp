@@ -1,16 +1,15 @@
 package com.clcmo.domain.di
 
 import com.clcmo.domain.uc.GetJobsUseCases
+import com.clcmo.domain.uc.GetJobsUseCasesImpl
 import io.reactivex.schedulers.Schedulers
 import org.koin.dsl.module
 
-
 val useCaseModule = module {
 
-    factory {
-        GetJobsUseCases(
-            repository = get(),
-            scheduler = Schedulers.io()
+    factory<GetJobsUseCases> {
+        GetJobsUseCasesImpl(
+            repository = get()
         )
     }
 }

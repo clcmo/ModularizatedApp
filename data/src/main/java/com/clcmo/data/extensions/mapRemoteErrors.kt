@@ -1,5 +1,6 @@
 package com.clcmo.data.extensions
 
+import com.clcmo.domain.responses.ResultRemote
 import retrofit2.HttpException
 
 fun Throwable.mapRemoteErrors(): ResultRemote.ErrorResponse = when (this) {

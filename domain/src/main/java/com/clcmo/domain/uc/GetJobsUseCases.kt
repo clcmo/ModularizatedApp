@@ -1,17 +1,15 @@
 package com.clcmo.domain.uc
 
 import com.clcmo.domain.entities.AndroidJob
-import com.clcmo.domain.repository.AndroidJobsRepository
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
-class GetJobsUseCases(
-    private val repository: AndroidJobsRepository,
-    private val scheduler: Scheduler
-) {
+interface GetJobsUseCases{
+    fun getJobs(): Flow<ResultJobs>
+    fun addJob()
 
-    fun execute(forceUpdate: Boolean): Single<List<AndroidJob>> =
-        repository.getJobs(forceUpdate)
-            .subscribeOn(scheduler)
+    sealed class ResultJobs {
+        data class Jobs(val list: List<AndroidJob>): ResultJobs()
+        object NoJobs: ResultJobs()
+        object Error: ResultJobs()
+    }
 }
