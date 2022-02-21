@@ -2,21 +2,20 @@ package com.clcmo.data.local.source
 
 import com.clcmo.data.local.database.JobsDAO
 import com.clcmo.data.local.mapper.AndroidJobCacheMapper
+import com.clcmo.data.local.model.AndroidJobCache
 import com.clcmo.domain.entities.AndroidJob
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 class JobsCacheSourceImpl(private val jobsDao: JobsDAO): JobsCacheDataSource {
 
-    override fun getJobs(): Single<List<AndroidJob>> {
-        return jobsDao.getJobs()
-            .map { AndroidJobCacheMapper.map(it) }
+    override fun getJobs(): Flow<List<AndroidJobCache>> = jobsDao.getJobs()
+
+    override fun insertData(jobCache: AndroidJobCache) {
+        jobsDao.insert(jobCache)
     }
 
-    override fun insertData(list: List<AndroidJob>) {
-        jobsDao.insertAll(AndroidJobCacheMapper.mapJobsToCache(list))
-    }
-
-    override fun updateData(list: List<AndroidJob>) {
-        jobsDao.updateData(AndroidJobCacheMapper.mapJobsToCache(list))
+    override fun updateData(cacheList: List<AndroidJobCache>) {
+        jobsDao.updateData(cacheList)
     }
 }

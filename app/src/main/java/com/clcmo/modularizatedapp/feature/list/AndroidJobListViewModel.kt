@@ -8,11 +8,13 @@ import com.clcmo.domain.entities.AndroidJob
 import com.clcmo.domain.uc.GetJobsUseCases
 import com.clcmo.modularizatedapp.utils.Event
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class AndroidJobListViewModel(
     private val jobsUseCase: GetJobsUseCases
 ): ViewModel() {
+
 
     private val _viewJobsStatesLiveData = MutableLiveData<Event<ViewJobsStates>>()
     val viewJobsStatesLiveData: LiveData<Event<ViewJobsStates>> = _viewJobsStatesLiveData

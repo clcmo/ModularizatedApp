@@ -6,28 +6,28 @@ import com.clcmo.data.remote.mapper.AndroidJobMapper
 import com.clcmo.data.remote.source.RemoteDataSource
 import com.clcmo.domain.entities.AndroidJob
 import com.clcmo.domain.repository.AndroidJobsRepository
+import com.clcmo.domain.responses.ResultRemote
+import com.clcmo.domain.responses.ResultRequired
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class AndroidJobsRepositoryImpl(
     private val jobsCacheDataSource: JobsCacheDataSource,
     private val remoteDataSource: RemoteDataSource
 ): AndroidJobsRepository {
 
-    override fun getJobs(): Flow<ResultRequired<List<AndroidJob>>> {
-        return jobsCacheDataSource.getJobs()
-            .map { cacheList ->
-                val result = when {
-                    cacheList.isEmpty() -> getJobsRemote()
-                    else -> {
-                        val jobs = AndroidJobCacheMapper.map(cacheList)
-                        ResultRequired.Success(jobs)
-                    }
+    override fun getJobs(): Flow<ResultRequired<List<AndroidJob>>> = jobsCacheDataSource.getJobs()
+        .map { cacheList ->
+            val result = when {
+                cacheList.isEmpty() -> getJobsRemote()
+                else -> {
+                    val jobs = AndroidJobCacheMapper.map(cacheList)
+                    ResultRequired.Success(jobs)
                 }
-
-                result
             }
-    }
+            result
+        }
 
     override fun add() {
         val androidJob = AndroidJob(
@@ -41,10 +41,8 @@ class AndroidJobsRepositoryImpl(
         jobsCacheDataSource.insertData(cacheJob)
     }
 
-    private suspend fun getJobsRemote(): ResultRequired<List<AndroidJob>> {
-        val resultRemote = remoteDataSource.getJobs()
-
-        return when(resultRemote) {
+    private suspend fun getJobsRemote(): ResultRequired<List<AndroidJob>> =
+        when(val resultRemote = remoteDataSource.getJobs()) {
             is ResultRemote.Success -> {
                 val mappedList = AndroidJobMapper.map(resultRemote.response)
                 val cacheList = AndroidJobCacheMapper.mapJobsToCache(mappedList)
@@ -59,5 +57,4 @@ class AndroidJobsRepositoryImpl(
                 ResultRequired.Error(resultRemote.throwable)
             }
         }
-    }
 }

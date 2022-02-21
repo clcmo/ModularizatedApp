@@ -1,9 +1,8 @@
 package com.clcmo.data.remote.source
 
-import com.clcmo.domain.entities.AndroidJob
-import io.reactivex.Single
+import com.clcmo.data.remote.model.JobsPayload
+import com.clcmo.domain.responses.ResultRemote
 
 interface RemoteDataSource {
-    fun getJobs(): Single<List<AndroidJob>>
+    suspend fun getJobs(): ResultRemote<JobsPayload>
 }
-
